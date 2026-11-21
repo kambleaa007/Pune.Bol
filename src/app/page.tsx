@@ -50,9 +50,12 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    const scrollToBottom = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    };
+    requestAnimationFrame(scrollToBottom);
   }, [messages, theme]);
 
   const sendMessage = useCallback(async (e: React.FormEvent) => {
@@ -103,6 +106,7 @@ export default function Home() {
       setMessages((prev) => [...prev, errMessage]);
     } finally {
       setLoading(false);
+      inputRef.current?.focus();
     }
   }, [input, loading, messages]);
 
