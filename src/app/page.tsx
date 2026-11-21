@@ -125,9 +125,9 @@ export default function Home() {
               <div className="inline-flex items-center justify-center rounded-full bg-muted p-3 mb-4">
                 <Bot className="h-8 w-8 opacity-50" />
               </div>
-              <h3 className="text-sm font-medium">Namaskar re!</h3>
-              <p className="text-xs max-w-xs mt-1">
-                Bolun ka. Mala vichara kayeshi - mi ithe ahe tumchya madatigari sathi.
+              <h3 className="text-sm font-medium font-marathi">नमस्कार रे!</h3>
+              <p className="text-xs max-w-xs mt-1 font-marathi">
+                बोलू का. मला विचारा काहीही - मी इथे आहे तुमच्यामधील मदतीसाठी.
               </p>
             </div>
           )}
@@ -203,7 +203,7 @@ export default function Home() {
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type-la message... (Ex: 'Vada pav khava ka?')"
+                placeholder="तुमचं संदेश लिहा... (उदा. 'वडा पाव खावा का?')"
                 disabled={loading}
                 className="min-h-[60px] md:min-h-[80px] max-h-[200px] resize-none font-marathi"
               />
