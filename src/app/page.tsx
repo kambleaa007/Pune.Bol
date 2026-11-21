@@ -158,7 +158,7 @@ export default function Home() {
                     </span>
                     {msg.role === "user" && <CheckCheck className="h-3 w-3 ml-auto opacity-60" />}
                   </CardHeader>
-                  <CardContent className="pt-0 text-sm leading-relaxed whitespace-pre-wrap">
+                  <CardContent className="pt-0 text-sm leading-relaxed whitespace-pre-wrap font-marathi">
                     {msg.content}
                   </CardContent>
                 </Card>
@@ -205,7 +205,7 @@ export default function Home() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type-la message... (Ex: 'Vada pav khava ka?')"
                 disabled={loading}
-                className="min-h-[60px] md:min-h-[80px] max-h-[200px] resize-none"
+                className="min-h-[60px] md:min-h-[80px] max-h-[200px] resize-none font-marathi"
               />
             </div>
             <Button
