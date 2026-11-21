@@ -43,9 +43,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ content });
   } catch (error: unknown) {
-    console.error("Groq error:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Groq error:", message);
     return NextResponse.json(
-      { error: "Failed to get response from Groq" },
+      { error: "Failed to get response from Groq", details: message },
       { status: 500 },
     );
   }
