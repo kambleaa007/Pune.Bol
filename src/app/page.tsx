@@ -2,22 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowRight,
   Bot,
-  Copy,
   CheckCheck,
   Loader2,
-  Maximize2,
-  Menu,
   Moon,
-  Settings,
+  Send,
   Sun,
+  Sparkles,
+  TrendingUp,
   User,
+  Zap,
 } from "lucide-react";
 
 type Message = {
@@ -33,18 +32,28 @@ const SYSTEM_PROMPT =
   "Always reply ONLY in Marathi using Devanagari script, even if the user writes in English or Hinglish. " +
   "Keep replies warm, short, and conversational.";
 
+const TAGS = [
+  "वडा पाव",
+  "मिसळ पाव",
+  "पुणेकर",
+  "मस्त",
+  "बरं",
+];
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, theme]);
 
   const sendMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +89,7 @@ export default function Home() {
       const aiMessage: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: data.content || "Kahi gadbad zhali re, try kara para.",
+        content: data.content || "मला माहित नाही रे, पुन्हा प्रयत्न करा.",
         createdAt: new Date(),
       };
       setMessages((prev) => [...prev, aiMessage]);
@@ -88,7 +97,7 @@ export default function Home() {
       const errMessage: Message = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "Server thambla ka? Please try again later.",
+        content: "काही समस्या आली आहे, पुन्हा ट्राय करा नंतर.",
         createdAt: new Date(),
       };
       setMessages((prev) => [...prev, errMessage]);
@@ -98,36 +107,57 @@ export default function Home() {
   }, [input, loading, messages]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur-lg px-6 py-3">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
-            <span className="text-xl font-bold tracking-tight">Pune<span className="text-primary">.Bol</span></span>
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-900 transition-colors duration-500">
+      {/* Background glow orbs */}
+      <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] rounded-full bg-purple-200/60 dark:bg-purple-900/30 blur-[120px] pointer-events-none"></div>
+      <div className="fixed bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-pink-200/60 dark:bg-pink-900/20 blur-[120px] pointer-events-none"></div>
+      <div className="fixed top-[20%] right-[-5%] w-[30rem] h-[30rem] rounded-full bg-indigo-200/50 dark:bg-indigo-900/20 blur-[100px] pointer-events-none"></div>
+
+      <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 backdrop-blur-md bg-white/60 dark:bg-slate-900/60 border-b border-white/30 dark:border-slate-700/30 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-200/50">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <p className="text-xs text-muted-foreground hidden md:block">
-            A Puneri Way AI Talks in Marathi &middot; Powered by Groq
-          </p>
-          <div className="flex items-center gap-2">
-            <button className="text-muted-foreground hover:text-foreground transition">
+          <div>
+            <h1 className="text-lg font-bold tracking-tight">Pune<span className="text-purple-600 dark:text-purple-400">.Bol</span></h1>
+            <p className="text-xs text-muted-foreground">मराठी AI चॅट</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+            className="w-9 h-9 rounded-xl bg-secondary hover:bg-accent flex items-center justify-center text-secondary-foreground transition"
+          >
+            {theme === "dark" ? (
               <Sun className="h-4 w-4" />
-            </button>
-            <button className="text-muted-foreground hover:text-foreground transition">
-              <Settings className="h-4 w-4" />
-            </button>
-          </div>
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth" ref={scrollRef}>
+      <main className="flex-1 relative px-6 pt-4 pb-20 max-w-2xl mx-auto w-full">
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
+          {TAGS.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setInput(tag)}
+              className="px-3 py-1.5 rounded-full bg-white/70 dark:bg-slate-800/80 border border-white/30 dark:border-slate-600/30 text-xs font-medium text-foreground hover:bg-white/80 dark:hover:bg-slate-700 transition backdrop-blur"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-1 md:p-2 scroll-smooth" ref={scrollRef}>
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-              <div className="inline-flex items-center justify-center rounded-full bg-muted p-3 mb-4">
-                <Bot className="h-8 w-8 opacity-50" />
+              <div className="inline-flex items-center justify-center rounded-2xl bg-white/50 dark:bg-slate-800/50 p-4 mb-6 shadow-sm border border-white/20 dark:border-white/10">
+                <Bot className="h-8 w-8 text-purple-500 dark:text-purple-400" />
               </div>
-              <h3 className="text-sm font-medium font-marathi">नमस्कार रे!</h3>
-              <p className="text-xs max-w-xs mt-1 font-marathi">
+              <h3 className="text-sm font-semibold font-marathi">नमस्कार रे!</h3>
+              <p className="text-xs mt-1 max-w-xs font-marathi">
                 बोलू का. मला विचारा काहीही - मी इथे आहे तुमच्यामधील मदतीसाठी.
               </p>
             </div>
@@ -137,106 +167,94 @@ export default function Home() {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex flex-col gap-1.5 ${
-                  msg.role === "user" ? "items-end" : "items-start"
-                }`}
+                className={`flex flex-col gap-2 ${msg.role === "user" ? "items-end" : "items-start"}`}
               >
                 <Card
-                  className={`rounded-xl p-4 shadow-sm border ${
+                  className={`rounded-2xl p-4 shadow-sm border ${
                     msg.role === "user"
-                      ? "bg-primary text-primary-foreground ml-auto md:max-w-[80%]"
-                      : "bg-card text-card-foreground mr-auto md:max-w-[80%]"
+                      ? "bg-gradient-to-br from-purple-600 to-indigo-600 text-white ml-auto md:max-w-[85%] dark:from-purple-700 dark:to-indigo-700"
+                      : "bg-white dark:bg-slate-800 text-foreground dark:text-slate-100 mr-auto md:max-w-[85%]"
                   }`}
                 >
-                  <CardHeader className="flex flex-row items-center gap-1.5 pb-1">
+                  <CardHeader className="flex flex-row items-center gap-2 pb-1">
                     {msg.role === "user" ? (
-                      <User className="h-3 w-3 opacity-80" />
+                      <User className="h-3 w-3 opacity-70" />
                     ) : (
-                      <Bot className="h-3 w-3 opacity-80" />
+                      <Bot className="h-3 w-3 text-purple-500 dark:text-purple-400" />
                     )}
-                    <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">
-                      {msg.role === "user" ? "Tu" : "AI"}
+                    <span className="text-[10px] font-semibold uppercase tracking-wider opacity-60">
+                      {msg.role === "user" ? "तू" : "एआय"}
                     </span>
-                    {msg.role === "user" && <CheckCheck className="h-3 w-3 ml-auto opacity-60" />}
+                    {msg.role === "user" && <CheckCheck className="h-3 w-3 ml-auto opacity-50" />}
                   </CardHeader>
                   <CardContent className="pt-0 text-sm leading-relaxed whitespace-pre-wrap font-marathi">
                     {msg.content}
                   </CardContent>
                 </Card>
-                {msg.role === "assistant" && (
-                  <div className="flex gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
-                    <button
-                      className="rounded p-1.5 bg-muted hover:bg-accent text-xs text-muted-foreground hover:text-accent-foreground transition"
-                      title="Copy"
-                    >
-                      <Copy className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
               </div>
             ))}
             {loading && (
-              <div className="flex flex-col gap-1.5 items-start">
-                <Card className="bg-card text-card-foreground rounded-xl p-4 border shadow-sm mr-auto md:max-w-[80%]">
-                  <CardHeader className="flex flex-row items-center gap-1.5 pb-1">
-                    <Bot className="h-3 w-3 opacity-80" />
-                    <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">
-                      AI
+              <div className="flex flex-col gap-2 items-start">
+                <Card
+                  className="rounded-2xl p-4 shadow-sm border bg-white dark:bg-slate-800 text-foreground dark:text-slate-100 mr-auto md:max-w-[85%] animate-pulse"
+                >
+                  <CardHeader className="flex flex-row items-center gap-2 pb-1">
+                    <Bot className="h-3 w-3 text-purple-500 dark:text-purple-400" />
+                    <span className="text-[10px] font-semibold uppercase tracking-wider opacity-60">
+                      एआय
                     </span>
                   </CardHeader>
                   <CardContent className="pt-0 flex gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Type-la... </span>
+                    <Loader2 className="h-4 w-4 animate-spin text-purple-500" />
+                    <span className="text-sm text-muted-foreground font-marathi">
+                      टाइप करत आहे...
+                    </span>
                   </CardContent>
                 </Card>
               </div>
             )}
           </div>
         </div>
-
-        <form
-          onSubmit={sendMessage}
-          className="sticky bottom-0 z-20 border-t bg-background/90 backdrop-blur-md p-4 md:p-6"
-        >
-          <div className="flex flex-col md:flex-row gap-3 max-w-3xl mx-auto">
-            <div className="flex-1 relative">
-              <Textarea
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="तुमचं संदेश लिहा... (उदा. 'वडा पाव खावा का?')"
-                disabled={loading}
-                className="min-h-[60px] md:min-h-[80px] max-h-[200px] resize-none font-marathi"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="whitespace-nowrap px-6"
-            >
-              {loading ? (
-                <span>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Sending...
-                </span>
-              ) : (
-                <span>
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  Pathvuna
-                </span>
-              )}
-            </Button>
-          </div>
-          <div className="mt-2 flex justify-between items-center max-w-3xl mx-auto px-1">
-            <span className="text-[10px] text-muted-foreground">
-              Groq-powered &middot; Fast &amp; efficient
-            </span>
-            <button className="text-xs text-muted-foreground hover:text-foreground transition underline">
-              Clear chat
-            </button>
-          </div>
-        </form>
       </main>
+
+      <form
+        onSubmit={sendMessage}
+        className="sticky bottom-0 z-30 px-6 pt-4 pb-6 max-w-2xl mx-auto w-full"
+      >
+        <div className="flex items-end gap-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 p-3 shadow-xl">
+          <div className="flex-1 relative">
+            <Textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="तुमचं संदेश लिहा... (उदा. 'वडा पाव खावा का?')"
+              disabled={loading}
+              className="min-h-[52px] max-h-[120px] resize-none bg-transparent border-none outline-none text-sm font-marathi text-foreground dark:text-slate-100 placeholder:text-muted-foreground/70 px-2 py-2"
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={loading || !input.trim()}
+            className="h-10 w-10 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-200/50 hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-white" />
+            ) : (
+              <Send className="h-4 w-4 text-white" />
+            )}
+          </Button>
+        </div>
+        <div className="mt-3 flex justify-between items-center text-[10px] text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Zap className="h-3 w-3" />
+            ग्रoq पॉवर्ड &bull; वेगवान
+          </span>
+          <span className="flex items-center gap-1">
+            <TrendingUp className="h-3 w-3" />
+            GenZ व्हाइब
+          </span>
+        </div>
+      </form>
     </div>
   );
 }
