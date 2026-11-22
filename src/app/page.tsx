@@ -145,8 +145,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 relative px-6 pt-4 pb-20 max-w-2xl mx-auto w-full">
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+      <main className="relative flex-1 overflow-hidden px-6 pt-4 pb-20 max-w-2xl mx-auto w-full">
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
           {TAGS.map((tag) => (
             <button
               key={tag}
@@ -158,7 +158,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-1 md:p-2" ref={scrollRef}>
+        <div className="flex-1 min-h-0 overflow-y-auto p-1 md:p-2" ref={scrollRef}>
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
               <div className="inline-flex items-center justify-center rounded-2xl bg-white/50 dark:bg-slate-800/50 p-4 mb-6 shadow-sm border border-white/20 dark:border-white/10">
