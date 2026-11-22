@@ -3,10 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  ArrowRight,
   Bot,
   CheckCheck,
   Loader2,
@@ -58,7 +56,7 @@ export default function Home() {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     };
-    const timer = setTimeout(scrollToBottom, 50);
+    const timer = setTimeout(scrollToBottom, 80);
     return () => clearTimeout(timer);
   }, [messages, loading]);
 
@@ -115,7 +113,7 @@ export default function Home() {
   }, [input, loading, messages]);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-900 transition-colors duration-500">
+    <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 dark:from-slate-950 dark:via-indigo-950 dark:to-purple-900 transition-colors duration-500">
       {/* Background glow orbs */}
       <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] rounded-full bg-purple-200/60 dark:bg-purple-900/30 blur-[120px] pointer-events-none"></div>
       <div className="fixed bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-pink-200/60 dark:bg-pink-900/20 blur-[120px] pointer-events-none"></div>
@@ -145,7 +143,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative flex-1 overflow-hidden px-6 pt-4 pb-20 max-w-2xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto px-6 pt-4 pb-32 max-w-2xl mx-auto w-full">
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           {TAGS.map((tag) => (
             <button
@@ -158,9 +156,9 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto p-1 md:p-2" ref={scrollRef}>
+        <div ref={scrollRef} className="pb-4">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+            <div className="flex flex-col items-center justify-center min-h-[40vh] text-center text-muted-foreground">
               <div className="inline-flex items-center justify-center rounded-2xl bg-white/50 dark:bg-slate-800/50 p-4 mb-6 shadow-sm border border-white/20 dark:border-white/10">
                 <Bot className="h-8 w-8 text-purple-500 dark:text-purple-400" />
               </div>
@@ -227,7 +225,7 @@ export default function Home() {
 
       <form
         onSubmit={sendMessage}
-        className="sticky bottom-0 z-30 px-6 pt-4 pb-6 max-w-2xl mx-auto w-full"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30 pt-4 pb-6 max-w-2xl w-full"
       >
         <div className="flex items-end gap-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 p-3 shadow-xl">
           <div className="flex-1 relative">
