@@ -50,13 +50,17 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
+  useEffect(() => {
     const scrollToBottom = () => {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     };
-    requestAnimationFrame(scrollToBottom);
-  }, [messages, theme]);
+    const timer = setTimeout(scrollToBottom, 50);
+    return () => clearTimeout(timer);
+  }, [messages, loading]);
 
   const sendMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,7 +158,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-1 md:p-2 scroll-smooth" ref={scrollRef}>
+        <div className="flex-1 overflow-y-auto p-1 md:p-2" ref={scrollRef}>
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
               <div className="inline-flex items-center justify-center rounded-2xl bg-white/50 dark:bg-slate-800/50 p-4 mb-6 shadow-sm border border-white/20 dark:border-white/10">
